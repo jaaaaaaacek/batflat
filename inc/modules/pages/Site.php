@@ -17,6 +17,7 @@ class Site extends SiteModule
 {
     public function init()
     {
+
         $slug = parseURL();
         $lang = $this->_getLanguageBySlug($slug[0]);
         if ($lang !== false) {

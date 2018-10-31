@@ -16,12 +16,21 @@ use Inc\Core\Lib\Templates;
 use Inc\Core\Lib\Router;
 use Inc\Core\Lib\Settings;
 use Inc\Core\Lib\License;
+use Inc\Core\Lib\Translation;
 
 /**
  * Base for core classes
  */
 abstract class Main
 {
+    /**
+     * Translation instance
+     *
+     * @var Translation
+     */
+
+    public $translation;
+
     /**
      * Language array
      *
@@ -98,6 +107,7 @@ abstract class Main
         
         $this->tpl = new Templates($this);
         $this->router = new Router;
+        $this->translation = new Translation($this);
 
         $this->append(base64_decode('PG1ldGEgbmFtZT0iZ2VuZXJhdG9yIiBjb250ZW50PSJCYXRmbGF0IiAvPg=='), 'header');
     }

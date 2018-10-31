@@ -59,6 +59,13 @@ class BaseModule
     protected $lang;
 
     /**
+     * Reference to Translation instance
+     *
+     * @var \Inc\Core\Lib\Translation
+     */
+    protected $translation;
+
+    /**
      * Module constructor
      *
      * @param Inc\Core\Main $core
@@ -72,6 +79,7 @@ class BaseModule
         $this->settings = $core->settings;
         $this->lang = $core->lang;
         $this->name = strtolower(str_replace(['Inc\Modules\\', '\\Admin', '\\Site'], null, static::class));
+        $this->translation = $core->translation;
     }
 
     /**

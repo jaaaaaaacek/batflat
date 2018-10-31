@@ -35,7 +35,6 @@ class Site extends SiteModule
             $this->_setLanguage($_GET['lang']);
 
             $dir = trim(dirname($_SERVER['SCRIPT_NAME']), '/');
-
             $e = parseURL();
             foreach ($this->_getLanguages() as $lng) {
                 if ($lng['symbol'] == $e[0]) {
@@ -69,6 +68,7 @@ class Site extends SiteModule
             if (!$all & file_exists($lang.'/.lock')) {
                 continue;
             }
+
             $lang = basename($lang);
             $result[] = [
                 'dir'   => $lang,
