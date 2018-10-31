@@ -1,5 +1,9 @@
+.idea
+yarn.lock
+node_modules
+
 admin/tmp/
 tmp/
 uploads/
 inc/data/*.sdb
-.idea
+
