@@ -78,6 +78,12 @@ class Site extends SiteModule
             $row['content'] = $parsedown->text($row['content']);
         }
 
+        $row['cover_url'] = url(UPLOADS.'/pages/'.$row['cover_photo']);
+
+        if (!empty($row['cover_photo'])) {
+            $this->core->append('<meta property="og:image" content="'.url(UPLOADS.'/pages/'.$row['cover_photo']).'">', 'header');
+        }
+
         $this->filterRecord($row);
         $this->setTemplate($row['template']);
         $this->tpl->set('page', $row);

@@ -112,6 +112,7 @@ class Admin extends AdminModule
             $this->assign['title'] = $this->lang('edit_page');
             $this->assign['langs'] = $this->_getLanguages($page['lang'], 'selected');
             $this->assign['templates'] = $this->_getTemplates($page['template']);
+            $this->assign['coverDeleteURL'] = url([ADMIN, 'pages', 'deleteCover', $id]);
             $this->assign['manageURL'] = url([ADMIN, 'pages', 'manage']);
 
             return $this->draw('form.html', ['pages' => $this->assign]);
@@ -142,11 +143,26 @@ class Admin extends AdminModule
         if (!isset($_POST['markdown'])) {
             $_POST['markdown'] = 0;
         }
-        
+
         if (empty($_POST['slug'])) {
             $_POST['slug'] = createSlug($_POST['title']);
         } else {
             $_POST['slug'] = createSlug($_POST['slug']);
+        }
+
+        if (isset($_FILES['cover_photo']['tmp_name'])) {
+            $img = new \Inc\Core\Lib\Image;
+
+            if ($img->load($_FILES['cover_photo']['tmp_name'])) {
+                if ($img->getInfos('width') > 1000) {
+                    $img->resize(1000);
+                } elseif ($img->getInfos('width') < 600) {
+                    $img->resize(600);
+                }
+
+                $_POST['cover_photo'] = $_POST['slug'].".".$img->getInfos('type');
+            }
+
         }
 
         if ($id != null && $this->db('pages')->where('slug', $_POST['slug'])->where('lang', $_POST['lang'])->where('id', '!=', $id)->oneArray()) {
@@ -165,6 +181,10 @@ class Admin extends AdminModule
             $query = $this->db('pages')->where('id', $id)->save($_POST);
         }
 
+        if (isset($img)) {
+            $img->save(UPLOADS . "/pages/" . $_POST['cover_photo']);
+        }
+
         if ($query) {
             $this->notify('success', $this->lang('save_success'));
         } else {
@@ -179,7 +199,11 @@ class Admin extends AdminModule
     */
     public function getDelete($id)
     {
-        if ($this->db('pages')->delete($id)) {
+        if ($page = $this->db('pages')->delete($id)) {
+            if (!empty($page['cover_photo']) && file_exists(UPLOADS."/pages/".$page['cover_photo'])) {
+                unlink(UPLOADS."/pages/".$page['cover_photo']);
+            }
+
             $this->notify('success', $this->lang('delete_success'));
         } else {
             $this->notify('failure', $this->lang('delete_failure'));
@@ -188,6 +212,20 @@ class Admin extends AdminModule
         redirect(url([ADMIN, 'pages', 'manage']));
     }
 
+
+    /**
+     * remove post cover
+     */
+    public function getDeleteCover($id)
+    {
+        if ($post = $this->db('pages')->where('id', $id)->oneArray()) {
+            unlink(UPLOADS."/pages/".$post['cover_photo']);
+            $this->db('pages')->where('id', $id)->save(['cover_photo' => null]);
+            $this->notify('success', $this->lang('cover_deleted'));
+
+            redirect(url([ADMIN, 'pages', 'edit', $id]));
+        }
+    }
 
     /**
     * image upload from WYSIWYG

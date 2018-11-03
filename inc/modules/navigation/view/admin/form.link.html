@@ -6,7 +6,7 @@
             </div>
             <div class="panel-body">
                 <form name="link" action="{?=url(ADMIN.'/navigation/saveLink/'.@$navigation.link.id)?}" method="POST">
-    	            <div class="form-group">
+					<div class="form-group" {if: isset($navigation.name)} style="display: none;"{/if}>
     	                <label>{$lang.general.lang}</label>
     	                <select name="lang" class="form-control">
                             {loop: $navigation.langs}

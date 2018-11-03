@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+{template: inc/head.html}
+<body>
+{template: inc/header.html}
+
+<!-- Main Content -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            {$page.content}
+
+                {if: $page.cover_photo}
+                <img src="{$page.cover_url}" class="post-cover" alt="{$page.title}" />
+                {/if}
+
+        </div>
+    </div>
+</div>
+
+{template: inc/footer.html}
+
+</body>
+
+</html>

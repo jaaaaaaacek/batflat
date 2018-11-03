@@ -100,7 +100,7 @@ class Admin extends AdminModule
             } else {
                 $lang = $row['lang'];
             }
-            $this->assign['langs'] = $this->_getLanguages($lang, 'selected');
+
 
             $this->assign['link'] = filter_var_array($row, FILTER_SANITIZE_SPECIAL_CHARS);
 
@@ -132,6 +132,12 @@ class Admin extends AdminModule
             $fields = ['name', 'page', 'lang', 'parent'];
         } else {
             $fields = ['name', 'url', 'lang', 'parent'];
+        }
+
+        if ($id !== null) {
+            if ($key = array_search('lang', $fields) !== false) {
+                unset($fields[$key]);
+            }
         }
 
         if (!$id) {
